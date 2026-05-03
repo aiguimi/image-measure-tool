@@ -3,80 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title data-lang="title">随身测量尺 · 参照物标定测长度｜爱硅蜜 AIGuimi</title>
+    <title>全能测量尺 · 中英双语</title>
     <style>
         * {
             box-sizing: border-box;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
         body {
-            background: #f1f5f9;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
             padding: 16px;
             margin: 0;
         }
-        .card {
-            max-width: 700px;
+        .container {
+            max-width: 880px;
             margin: 0 auto;
             background: white;
-            border-radius: 36px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            border-radius: 40px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
             overflow: hidden;
-            padding: 20px 20px 28px;
+            padding: 20px;
+        }
+        .header-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            gap: 12px;
         }
         h1 {
-            font-size: 1.7rem;
+            font-size: 1.8rem;
             font-weight: 600;
-            margin: 0 0 4px;
-            text-align: center;
-            color: #0f172a;
-            letter-spacing: -0.3px;
+            margin: 0;
+            color: #1e293b;
+        }
+        .lang-switch {
+            min-width: 120px;
+        }
+        .lang-select {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 2rem;
+            border: 1px solid #cbdde9;
+            background-color: white;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
         }
         .sub {
             text-align: center;
-            font-size: 0.8rem;
-            color: #475569;
+            color: #5b6e8c;
+            font-size: 0.85rem;
             margin-bottom: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e9ecef;
             padding-bottom: 12px;
         }
-        .lang-bar {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .lang-btn {
-            padding: 6px 10px;
-            margin: 0 4px;
-            border-radius: 20px;
-            border: 1px solid #cbd5e1;
-            background: white;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-        .lang-btn.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-        .upload-zone {
+        .upload-area {
             background: #f8fafc;
-            border: 1.5px dashed #cbd5e1;
-            border-radius: 28px;
-            padding: 12px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 32px;
+            padding: 16px;
             text-align: center;
-            margin-bottom: 16px;
-            transition: 0.2s;
             cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 20px;
         }
-        .upload-zone:active {
-            background: #eef2ff;
-        }
-        .upload-zone span {
-            font-size: 0.85rem;
-            color: #2563eb;
-            font-weight: 500;
-        }
-        input[type="file"] { display: none; }
+        .upload-area:active { background: #eef2ff; }
+        .upload-icon { font-size: 2rem; display: block; }
+        .upload-text { font-size: 0.9rem; color: #3b82f6; font-weight: 500; }
         canvas {
             display: block;
             width: 100%;
@@ -87,27 +85,18 @@
             border: 1px solid #e2e8f0;
             cursor: crosshair;
         }
-        .info-bar {
-            background: #f1f5f9;
-            border-radius: 24px;
-            padding: 12px 16px;
-            margin: 12px 0;
-            font-size: 0.8rem;
-            color: #1e293b;
+        .toolbar {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 16px;
+            margin: 16px 0;
         }
-        .flex-row {
+        .row {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             align-items: center;
             margin-bottom: 12px;
-        }
-        .label-badge {
-            background: #e6f0ff;
-            padding: 5px 12px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
         }
         button {
             background: white;
@@ -116,25 +105,23 @@
             padding: 8px 18px;
             font-size: 0.8rem;
             font-weight: 500;
-            color: #1e293b;
-            transition: 0.15s;
             cursor: pointer;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+            transition: 0.1s;
         }
         button.primary {
             background: #3b82f6;
             border-color: #3b82f6;
             color: white;
         }
-        button.warning {
-            background: #fef9e3;
-            border-color: #fde047;
-            color: #854d0e;
-        }
         button.danger {
             background: #fee2e2;
             border-color: #fecaca;
             color: #b91c1c;
+        }
+        button.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
         }
         button:active { transform: scale(0.96); }
         .input-small {
@@ -144,599 +131,631 @@
             border-radius: 60px;
             padding: 8px 14px;
             font-size: 0.85rem;
+        }
+        select {
+            border-radius: 60px;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
             background: white;
         }
-        .status-text {
-            font-size: 0.75rem;
-            background: #eef2ff;
-            border-radius: 20px;
-            padding: 6px 12px;
-            display: inline-block;
-        }
-        hr {
-            margin: 12px 0;
-            border: none;
-            border-top: 1px solid #e2e8f0;
-        }
-        .measure-result {
-            font-weight: 600;
-            background: #dbeafe;
+        .badge {
+            background: #e6f0ff;
             padding: 6px 12px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
-        .footer-tip {
+        .result-panel {
+            background: #f1f5f9;
+            border-radius: 28px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .status { font-size: 0.8rem; color: #1e293b; }
+        .result {
+            font-weight: 800;
+            background: #dbeafe;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            color: #075985;
+            font-family: monospace;
+            white-space: pre-wrap;
+            text-align: center;
+        }
+        .error-tip {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #9a3412;
+            margin-top: 16px;
+        }
+        .footnote {
             font-size: 0.7rem;
             color: #5b6e8c;
             text-align: center;
             margin-top: 16px;
         }
-        button:disabled {
-            opacity: 0.5;
-            transform: none;
-            cursor: not-allowed;
+        .ref-b-panel {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+        .quick-sizes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+        .quick-sizes button {
+            background: #eef2ff;
+            border-color: #cbd5e1;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+        }
+        @media (max-width: 550px) {
+            button { padding: 6px 12px; font-size: 0.7rem; }
+            .input-small { font-size: 0.75rem; }
+            .result { font-size: 1.2rem; padding: 6px 12px; }
+            .quick-sizes button { font-size: 0.6rem; padding: 3px 8px; }
+            .header-row { flex-direction: column; align-items: stretch; }
+            h1 { text-align: center; }
         }
     </style>
 </head>
 <body>
-<div class="card">
-
-    <!-- 语言切换栏 -->
-    <div class="lang-bar">
-        <button class="lang-btn active" onclick="setLang('zh')">中</button>
-        <button class="lang-btn" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('ja')">日</button>
-        <button class="lang-btn" onclick="setLang('ko')">한</button>
-        <button class="lang-btn" onclick="setLang('ru')">Ру</button>
-        <button class="lang-btn" onclick="setLang('fr')">FR</button>
-    </div>
-
-    <h1 data-lang="h1">📐 参照物测量尺『爱硅蜜 AIGuimi』</h1>
-    <div class="sub" data-lang="sub">标定已知物品 → 刻度自动生成 → 测量任何物体长度</div>
-
-    <div class="upload-zone" id="uploadZone">
-        <span data-lang="upload">📸 点击上传 / 选择图片 (含参照物)</span>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg">
-    </div>
-
-    <canvas id="measureCanvas"></canvas>
-
-    <div class="info-bar">
-        <div class="flex-row">
-            <div class="label-badge" data-lang="ref_title">📍 参照物标定</div>
-            <button id="btnSetStart" data-lang="btn_a">🔘 点A (起点)</button>
-            <button id="btnSetEnd" data-lang="btn_b">🔘 点B (终点)</button>
-            <button id="btnClearRefPoints" class="danger" data-lang="btn_clear_ref">🗑️ 清除点</button>
-        </div>
-        <div class="flex-row">
-            <span data-lang="coord">已选起点: <span id="startCoord">—</span> &nbsp; 终点: <span id="endCoord">—</span></span>
-        </div>
-        <div class="flex-row">
-            <label data-lang="real_len" style="font-weight:500;">📏 参照物实际长度</label>
-            <input type="number" id="realLength" class="input-small" placeholder="15" step="any" value="15.0">
-            <select id="lengthUnit">
-                <option value="cm" data-lang="cm">厘米(cm)</option>
-                <option value="mm" data-lang="mm">毫米(mm)</option>
+<div class="container">
+    <div class="header-row">
+        <h1 id="mainTitle">📐 全能测量尺</h1>
+        <div class="lang-switch">
+            <select id="languageSwitcher" class="lang-select">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
             </select>
-            <button id="btnCalibrate" class="primary" data-lang="calibrate">✅ 标定 & 生成刻度尺</button>
-        </div>
-        <div class="flex-row" style="justify-content:space-between;">
-            <span data-lang="scale">📐 比例因子: <strong id="ratioValue">—</strong> (<span id="ratioUnit">px/cm</span>)</span>
-            <span data-lang="px_dist">📏 参照物像素距离: <strong id="refPxDist">—</strong> px</span>
         </div>
     </div>
+    <div class="sub" id="subTitle">长度 · 角度(双参照物独立) · 多边形面积(双参照物)</div>
 
-    <div class="flex-row" style="justify-content: space-between;">
-        <div class="label-badge" data-lang="tool">⚡ 测量工具</div>
-        <button id="btnMeasureMode" class="warning" data-lang="measure_mode">📏 测距模式 (点两点)</button>
-        <button id="btnClearMeasure" data-lang="clear_measure">✖️ 清除测量线</button>
+    <div class="upload-area" id="uploadZone">
+        <span class="upload-icon">📸</span>
+        <div class="upload-text" id="uploadText">点击上传 / 选择图片 (包含参照物)</div>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg" style="display:none">
     </div>
 
-    <div class="flex-row">
-        <div class="status-text" id="modeStatus" data-lang="mode_default">⚙️ 当前模式: 标定准备</div>
-        <div class="measure-result" id="measureResultDisplay">—</div>
+    <canvas id="measureCanvas" width="600" height="400" style="width:100%; height:auto; background:#eef2ff"></canvas>
+
+    <!-- 参照物A -->
+    <div class="toolbar">
+        <div class="row">
+            <div class="badge" id="refABadge">📍 参照物A (必填)</div>
+            <button id="btnStartPointA" data-i18n-btn="startA">🔘 点A1 (起点)</button>
+            <button id="btnEndPointA" data-i18n-btn="endA">🔘 点A2 (终点)</button>
+            <button id="btnClearRefA" class="danger" data-i18n-btn="clearA">🗑️ 清除A</button>
+        </div>
+        <div class="row">
+            <span id="startCoordLabel">起点A: </span><span id="startCoordA">—</span> &nbsp; <span id="endCoordLabel">终点A: </span><span id="endCoordA">—</span>
+        </div>
+        <div class="row">
+            <span id="realLengthALabel">📏 参照物A实际长度</span>
+            <input type="number" id="realLengthA" class="input-small" value="15.0" step="any">
+            <select id="unitSelectA">
+                <option value="cm" id="unitCmOption">厘米(cm)</option>
+                <option value="mm" id="unitMmOption">毫米(mm)</option>
+            </select>
+            <button id="btnCalibrateA" class="primary" data-i18n-btn="calibrateA">✅ 标定A & 生成刻度尺</button>
+        </div>
+        <div class="quick-sizes">
+            <span style="font-size:0.7rem; color:#475569;" id="quickATitle">✨ 快捷填入A长度：</span>
+            <button data-target="A" data-length="8.56" data-unit="cm" class="quick-size-btn">银行卡/身份证 8.56cm</button>
+            <button data-target="A" data-length="5.40" data-unit="cm" class="quick-size-btn">银行卡宽 5.40cm</button>
+            <button data-target="A" data-length="29.7" data-unit="cm" class="quick-size-btn">A4纸长 29.7cm</button>
+            <button data-target="A" data-length="21.0" data-unit="cm" class="quick-size-btn">A4纸宽 21.0cm</button>
+            <button data-target="A" data-length="15.0" data-unit="cm" class="quick-size-btn">手机参考 15.0cm</button>
+            <button data-target="A" data-length="10.0" data-unit="cm" class="quick-size-btn">快递面单 10.0cm</button>
+        </div>
+        <div class="row">
+            <span id="ratioALabel">📐 比例因子A: </span><strong id="ratioValA">—</strong> (<span id="ratioUnitA">px/cm</span>)
+            <span id="refPxALabel">参照物像素距A: </span><strong id="refPxA">—</strong> px
+        </div>
     </div>
 
-    <div class="footer-tip" data-lang="tip">
-        💡 提示：用身份证/银行卡/硬币等已知长度物品标定，点两端输入长度即可生成刻度尺。拍照请保持平行居中，结果更准确。
+    <!-- 参照物B -->
+    <div class="toolbar ref-b-panel">
+        <div class="row">
+            <div class="badge" id="refBBadge">📍 参照物B (可选)</div>
+            <button id="btnStartPointB" data-i18n-btn="startB">🔘 点B1 (起点)</button>
+            <button id="btnEndPointB" data-i18n-btn="endB">🔘 点B2 (终点)</button>
+            <button id="btnClearRefB" class="danger" data-i18n-btn="clearB">🗑️ 清除B</button>
+        </div>
+        <div class="row">
+            <span id="startCoordLabelB">起点B: </span><span id="startCoordB">—</span> &nbsp; <span id="endCoordLabelB">终点B: </span><span id="endCoordB">—</span>
+        </div>
+        <div class="row">
+            <span id="realLengthBLabel">📏 参照物B实际长度</span>
+            <input type="number" id="realLengthB" class="input-small" placeholder="" step="any">
+            <select id="unitSelectB">
+                <option value="cm">厘米(cm)</option>
+                <option value="mm">毫米(mm)</option>
+            </select>
+            <button id="btnCalibrateB" class="primary" data-i18n-btn="calibrateB">✅ 标定B</button>
+        </div>
+        <div class="quick-sizes">
+            <span style="font-size:0.7rem; color:#475569;" id="quickBTitle">✨ 快捷填入B长度：</span>
+            <button data-target="B" data-length="8.56" data-unit="cm" class="quick-size-btn quickB1">银行卡/身份证 8.56cm</button>
+            <button data-target="B" data-length="5.40" data-unit="cm" class="quick-size-btn quickB2">银行卡宽 5.40cm</button>
+            <button data-target="B" data-length="29.7" data-unit="cm" class="quick-size-btn quickB3">A4纸长 29.7cm</button>
+            <button data-target="B" data-length="21.0" data-unit="cm" class="quick-size-btn quickB4">A4纸宽 21.0cm</button>
+            <button data-target="B" data-length="15.0" data-unit="cm" class="quick-size-btn quickB5">手机参考 15.0cm</button>
+            <button data-target="B" data-length="10.0" data-unit="cm" class="quick-size-btn quickB6">快递面单 10.0cm</button>
+        </div>
+        <div class="row">
+            <span id="ratioBLabel">📐 比例因子B: </span><strong id="ratioValB">—</strong> (<span id="ratioUnitB">px/cm</span>)
+            <span id="refPxBLabel">参照物像素距B: </span><strong id="refPxB">—</strong> px
+        </div>
     </div>
+
+    <!-- 测量模式 -->
+    <div class="toolbar">
+        <div class="row">
+            <div class="badge" id="modeBadge">⚡ 测量模式</div>
+            <button id="modeLength" class="active" data-i18n-mode="length">📏 长度(两点)</button>
+            <button id="modeAngle" data-i18n-mode="angle">📐 角度(顶点+两边)</button>
+            <button id="modeArea" data-i18n-mode="area">🗂️ 多边形面积(≥3点)</button>
+            <button id="btnClearMeasure" data-i18n-btn="clearMeasure">✖️ 清除测量/图形</button>
+        </div>
+        <div class="result-panel">
+            <div class="status" id="modeStatus">⚙️ 请先上传图片，标定参照物A (B可选)</div>
+            <div class="result" id="resultDisplay">—</div>
+        </div>
+    </div>
+    
+    <div class="error-tip" id="errorTip">⚠️ 测量存在误差因素：拍照畸变、手动标记偏移、物体边缘模糊。建议多次拍照测量取平均值，并尽量让参照物与待测物体在同一平面。</div>
+    <div class="footnote" id="footnote">💡 操作指南：<br>1️⃣ 上传图片 → 2️⃣ 标定参照物A（必填），B可选 → 3️⃣ 选择测量模式<br>📐 角度：依次点击【顶点】→【一边点】→【另一边点】，显示 A/B 两套角度值<br>🗂️ 面积：依次点击多边形顶点(≥3) → 双击画布完成 → 显示 A/B 两套面积结果<br>✨ 若同时标定A和B，结果分别显示 A: xxx | B: xxx</div>
 </div>
 
 <script>
-// ==============================================
-// 多语言字典（6国：中、英、日、韩、俄、法）
-// ==============================================
-const langData = {
-  zh: {
-    title: "随身测量尺｜爱硅蜜 AIGuimi",
-    h1: "📐 参照物测量尺『爱硅蜜 AIGuimi』",
-    sub: "标定已知物品 → 刻度自动生成 → 测量任何物体长度",
-    upload: "📸 点击上传 / 选择图片 (含参照物)",
-    ref_title: "📍 参照物标定",
-    btn_a: "🔘 点A (起点)",
-    btn_b: "🔘 点B (终点)",
-    btn_clear_ref: "🗑️ 清除点",
-    coord: "已选起点: —  终点: —",
-    real_len: "📏 参照物实际长度",
-    cm: "厘米(cm)",
-    mm: "毫米(mm)",
-    calibrate: "✅ 标定 & 生成刻度尺",
-    scale: "📐 比例因子: — (px/cm)",
-    px_dist: "📏 参照物像素距离: — px",
-    tool: "⚡ 测量工具",
-    measure_mode: "📏 测距模式 (点两点)",
-    clear_measure: "✖️ 清除测量线",
-    mode_default: "⚙️ 当前模式: 标定准备",
-    tip: "💡 提示：用身份证/银行卡/硬币标定，点两端输入长度即可生成刻度。拍照请平行居中，结果更准确。"
-  },
-  en: {
-    title: "Measure Tool | AIGuimi",
-    h1: "📐 Reference Measure Tool | AIGuimi",
-    sub: "Calibrate → Auto Scale → Measure Any Object",
-    upload: "📸 Upload Image (with reference object)",
-    ref_title: "📍 Calibrate Reference",
-    btn_a: "🔘 Point A (Start)",
-    btn_b: "🔘 Point B (End)",
-    btn_clear_ref: "🗑️ Clear Points",
-    coord: "Start: —  End: —",
-    real_len: "📏 Reference Length",
-    cm: "cm",
-    mm: "mm",
-    calibrate: "✅ Calibrate & Show Ruler",
-    scale: "📐 Scale: — (px/cm)",
-    px_dist: "📏 Ref Distance: — px",
-    tool: "⚡ Measure Tools",
-    measure_mode: "📏 Measure Mode (2 points)",
-    clear_measure: "✖️ Clear Measure",
-    mode_default: "⚙️ Ready: Calibrate First",
-    tip: "💡 Tip: Use card/coin for reference. Keep parallel to camera for best accuracy."
-  },
-  ja: {
-    title: "測定ツール｜愛硅蜜 AIGuimi",
-    h1: "📐 参照物測定ツール『愛硅蜜 AIGuimi』",
-    sub: "基準物を設定 → 目盛り自動生成 → 長さ測定",
-    upload: "📸 画像をアップロード",
-    ref_title: "📍 基準物キャリブレーション",
-    btn_a: "🔘 点A（開始）",
-    btn_b: "🔘 点B（終了）",
-    btn_clear_ref: "🗑️ クリア",
-    coord: "開始: —  終了: —",
-    real_len: "📏 基準物の実長",
-    cm: "センチ(cm)",
-    mm: "ミリ(mm)",
-    calibrate: "✅ キャリブレーション",
-    scale: "📐 スケール: — (px/cm)",
-    px_dist: "📏 ピクセル距離: — px",
-    tool: "⚡ 測定ツール",
-    measure_mode: "📏 測定モード",
-    clear_measure: "✖️ 線を消す",
-    mode_default: "⚙️ 準備完了",
-    tip: "💡 身分証やカードを基準に。水平に撮影すると正確です。"
-  },
-  ko: {
-    title: "측정 툴｜애규미 AIGuimi",
-    h1: "📐 기준물 측정 툴 『애규미 AIGuimi』",
-    sub: "기준물 설정 → 눈금 자동생성 → 길이 측정",
-    upload: "📸 이미지 업로드",
-    ref_title: "📍 기준물 보정",
-    btn_a: "🔘 지점A (시작)",
-    btn_b: "🔘 지점B (끝)",
-    btn_clear_ref: "🗑️ 초기화",
-    coord: "시작: —  끝: —",
-    real_len: "📏 기준물 실제 길이",
-    cm: "센치(cm)",
-    mm: "밀리(mm)",
-    calibrate: "✅ 보정 및 눈금생성",
-    scale: "📐 스케일: — (px/cm)",
-    px_dist: "📏 픽셀 거리: — px",
-    tool: "⚡ 측정 도구",
-    measure_mode: "📏 측정 모드",
-    clear_measure: "✖️ 측정선 지우기",
-    mode_default: "⚙️ 준비 완료",
-    tip: "💡 신분증/카드로 보정하세요. 수평으로 촬영하면 정확도 up."
-  },
-  ru: {
-    title: "Линейка｜AIGuimi",
-    h1: "📐 Линейка по эталону | AIGuimi",
-    sub: "Калибровка → Автошкала → Измерение",
-    upload: "📸 Загрузить изображение",
-    ref_title: "📍 Калибровка",
-    btn_a: "🔘 Точка А",
-    btn_b: "🔘 Точка Б",
-    btn_clear_ref: "🗑️ Сброс",
-    coord: "Начало: —  Конец: —",
-    real_len: "📏 Длина эталона",
-    cm: "см",
-    mm: "мм",
-    calibrate: "✅ Калибровать",
-    scale: "📐 Масштаб: — (пкс/см)",
-    px_dist: "📏 Расстояние: — пкс",
-    tool: "⚡ Инструменты",
-    measure_mode: "📏 Режим измерения",
-    clear_measure: "✖️ Удалить линию",
-    mode_default: "⚙️ Готово",
-    tip: "💡 Используйте карту/монету. Снимайте параллельно."
-  },
-  fr: {
-    title: "Outil de mesure | AIGuimi",
-    h1: "📐 Outil de mesure | AIGuimi",
-    sub: "Étalonnage → Échelle auto → Mesurer",
-    upload: "📸 Importer une image",
-    ref_title: "📍 Étalonner",
-    btn_a: "🔘 Point A",
-    btn_b: "🔘 Point B",
-    btn_clear_ref: "🗑️ Effacer",
-    coord: "Début: —  Fin: —",
-    real_len: "📏 Longueur étalon",
-    cm: "cm",
-    mm: "mm",
-    calibrate: "✅ Étalonner",
-    scale: "📐 Échelle: — (px/cm)",
-    px_dist: "📏 Distance: — px",
-    tool: "⚡ Outils",
-    measure_mode: "📏 Mode mesure",
-    clear_measure: "✖️ Effacer ligne",
-    mode_default: "⚙️ Prêt",
-    tip: "💡 Utilisez carte/pièce. Gardez parallèle à l’appareil."
-  }
-};
+    // ================== 中英文双语字典 ==================
+    const langTexts = {
+        zh: {
+            title: "📐 全能测量尺", subTitle: "长度 · 角度(双参照物独立) · 多边形面积(双参照物)", uploadText: "点击上传 / 选择图片 (包含参照物)",
+            refABadge: "📍 参照物A (必填)", startA_btn: "🔘 点A1 (起点)", endA_btn: "🔘 点A2 (终点)", clearA_btn: "🗑️ 清除A",
+            startCoordLabel: "起点A:", endCoordLabel: "终点A:", realLengthALabel: "📏 参照物A实际长度", calibrateA_btn: "✅ 标定A & 生成刻度尺",
+            quickATitle: "✨ 快捷填入A长度：", ratioALabel: "📐 比例因子A: ", refPxALabel: "参照物像素距A: ",
+            refBBadge: "📍 参照物B (可选)", startB_btn: "🔘 点B1 (起点)", endB_btn: "🔘 点B2 (终点)", clearB_btn: "🗑️ 清除B",
+            startCoordLabelB: "起点B:", endCoordLabelB: "终点B:", realLengthBLabel: "📏 参照物B实际长度", calibrateB_btn: "✅ 标定B",
+            quickBTitle: "✨ 快捷填入B长度：", ratioBLabel: "📐 比例因子B: ", refPxBLabel: "参照物像素距B: ",
+            modeBadge: "⚡ 测量模式", modeLength: "📏 长度(两点)", modeAngle: "📐 角度(顶点+两边)", modeArea: "🗂️ 多边形面积(≥3点)", clearMeasure_btn: "✖️ 清除测量/图形",
+            initStatus: "⚙️ 请先上传图片，标定参照物A (B可选)",
+            errorTip: "⚠️ 测量存在误差因素：拍照畸变、手动标记偏移、物体边缘模糊。建议多次拍照测量取平均值。",
+            footnote: "💡 操作指南：<br>1️⃣ 上传图片 → 2️⃣ 标定参照物A（必填），B可选 → 3️⃣ 选择测量模式<br>📐 角度：依次点击【顶点】→【一边点】→【另一边点】<br>🗂️ 面积：点击顶点(≥3) → 双击画布完成",
+            unitCm: "厘米(cm)", unitMm: "毫米(mm)",
+            canvasLabel_A_start: "A起点", canvasLabel_A_end: "A终点", canvasLabel_B_start: "B起点", canvasLabel_B_end: "B终点", canvasLabel_vertex: "顶点", rulerLabel: "📏 参照物起点 →",
+            alert_uploadFirst: "请先上传图片", alert_missingRefA: "请先标记参照物A的起点和终点", alert_invalidLengthA: "请输入有效的参照物A长度", alert_pointsTooCloseA: "参照物A两点距离过近",
+            alert_missingRefB: "请先标记参照物B的起点和终点", alert_invalidLengthB: "请输入有效的参照物B长度", alert_pointsTooCloseB: "参照物B两点距离过近",
+            status_startASelected: "起点A已选，请选终点A", status_endASelected: "终点A已选，输入长度后点击标定A",
+            status_startBSelected: "起点B已选，请选终点B", status_endBSelected: "终点B已选，输入长度后点击标定B",
+            status_calibratedA: "✅ 参照物A已标定 · 1{unit} = {val}px", status_calibratedB: "✅ 参照物B已标定 · 1{unit} = {val}px",
+            status_clearedA: "参照物A已清除", status_clearedB: "参照物B已清除", status_imgLoaded: "图片已加载，请标定参照物A (B可选)",
+            status_angle_vertex: "角度模式: 请点击边上的点B (角的一边)", status_angle_second: "角度模式: 请点击另一边上的点C", status_angle_done: "角度测量完成",
+            status_angle_already: "角度已完成，请按「清除测量」重新开始", status_area_complete: "✅ 多边形面积计算完成", status_area_needMore: "至少需要3个顶点才能闭合多边形",
+            status_area_closed: "多边形已闭合，请按「清除测量」重新开始", status_length_waitSecond: "点击第二个点",
+            status_modeTip_length: "📏 长度模式: 点击图片上两点测量长度", status_modeTip_angle: "📐 角度模式: 依次点击 顶点A → 边上的点B → 边上的点C",
+            status_modeTip_area: "🗂️ 多边形面积: 依次点击多边形顶点(≥3点)，双击画布结束",
+            status_quickFillA: "参照物A长度已填入 {val} {unit}，请继续标定", status_quickFillB: "参照物B长度已填入 {val} {unit}，请继续标定",
+            quickBtn_card: "银行卡/身份证 8.56cm", quickBtn_cardW: "银行卡宽 5.40cm", quickBtn_a4l: "A4纸长 29.7cm", quickBtn_a4w: "A4纸宽 21.0cm", quickBtn_phone: "手机参考 15.0cm", quickBtn_express: "快递面单 10.0cm"
+        },
+        en: {
+            title: "📐 All-in-One Measure", subTitle: "Length · Angle (dual reference) · Polygon Area", uploadText: "Tap to upload image (with reference object)",
+            refABadge: "📍 Reference A (required)", startA_btn: "🔘 Point A1 (start)", endA_btn: "🔘 Point A2 (end)", clearA_btn: "🗑️ Clear A",
+            startCoordLabel: "Start A:", endCoordLabel: "End A:", realLengthALabel: "📏 Actual length of A", calibrateA_btn: "✅ Calibrate A & Ruler",
+            quickATitle: "✨ Quick fill A length:", ratioALabel: "📐 Scale factor A: ", refPxALabel: "Ref pixel distance A: ",
+            refBBadge: "📍 Reference B (optional)", startB_btn: "🔘 Point B1 (start)", endB_btn: "🔘 Point B2 (end)", clearB_btn: "🗑️ Clear B",
+            startCoordLabelB: "Start B:", endCoordLabelB: "End B:", realLengthBLabel: "📏 Actual length of B", calibrateB_btn: "✅ Calibrate B",
+            quickBTitle: "✨ Quick fill B length:", ratioBLabel: "📐 Scale factor B: ", refPxBLabel: "Ref pixel distance B: ",
+            modeBadge: "⚡ Measure mode", modeLength: "📏 Length (2 points)", modeAngle: "📐 Angle (vertex+2 sides)", modeArea: "🗂️ Polygon Area (≥3 points)", clearMeasure_btn: "✖️ Clear measure",
+            initStatus: "⚙️ Upload image first, calibrate reference A (B optional)",
+            errorTip: "⚠️ Possible errors: lens distortion, manual marking offset. Average several photos.",
+            footnote: "💡 Guide:<br>1️⃣ Upload → 2️⃣ Calibrate A (required), B optional → 3️⃣ Select mode<br>📐 Angle: click [Vertex] → [Point on side1] → [Point on side2]<br>🗂️ Area: click vertices (≥3) → double-click canvas to finish",
+            unitCm: "cm", unitMm: "mm",
+            canvasLabel_A_start: "A start", canvasLabel_A_end: "A end", canvasLabel_B_start: "B start", canvasLabel_B_end: "B end", canvasLabel_vertex: "Vertex", rulerLabel: "📏 Reference start →",
+            alert_uploadFirst: "Please upload an image first", alert_missingRefA: "Please mark start & end points for reference A", alert_invalidLengthA: "Enter valid length for reference A", alert_pointsTooCloseA: "Reference A points too close",
+            alert_missingRefB: "Please mark start & end points for reference B", alert_invalidLengthB: "Enter valid length for reference B", alert_pointsTooCloseB: "Reference B points too close",
+            status_startASelected: "Start A selected, now choose end A", status_endASelected: "End A selected, enter length & calibrate A",
+            status_startBSelected: "Start B selected, now choose end B", status_endBSelected: "End B selected, enter length & calibrate B",
+            status_calibratedA: "✅ Reference A calibrated · 1{unit} = {val}px", status_calibratedB: "✅ Reference B calibrated · 1{unit} = {val}px",
+            status_clearedA: "Reference A cleared", status_clearedB: "Reference B cleared", status_imgLoaded: "Image loaded, please calibrate reference A (B optional)",
+            status_angle_vertex: "Angle mode: Click point on one side (B)", status_angle_second: "Angle mode: Click point on the other side (C)", status_angle_done: "Angle measurement done",
+            status_angle_already: "Angle already done, press 'Clear measure' to restart", status_area_complete: "✅ Polygon area calculated", status_area_needMore: "Need at least 3 vertices to close polygon",
+            status_area_closed: "Polygon closed, press 'Clear measure' to restart", status_length_waitSecond: "Click second point",
+            status_modeTip_length: "📏 Length mode: click two points on image", status_modeTip_angle: "📐 Angle mode: click Vertex → point on side1 → point on side2",
+            status_modeTip_area: "🗂️ Polygon area: click vertices (≥3), double-click to finish",
+            status_quickFillA: "Reference A length set to {val} {unit}, please calibrate", status_quickFillB: "Reference B length set to {val} {unit}, please calibrate",
+            quickBtn_card: "Bank card/ID 8.56cm", quickBtn_cardW: "Bank card width 5.40cm", quickBtn_a4l: "A4 paper length 29.7cm", quickBtn_a4w: "A4 paper width 21.0cm", quickBtn_phone: "Phone ref 15.0cm", quickBtn_express: "Courier label 10.0cm"
+        }
+    };
 
-// 切换语言
-function setLang(lang) {
-  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('[data-lang]').forEach(el => {
-    const key = el.getAttribute('data-lang');
-    if (langData[lang][key]) el.textContent = langData[lang][key];
-  });
-  document.documentElement.lang = lang;
+    let currentLang = localStorage.getItem('measure_lang') || 'zh';
+    function t(key, params={}) {
+        let str = langTexts[currentLang][key] || langTexts.zh[key] || key;
+        for(let k in params) str = str.replace(`{${k}}`, params[k]);
+        return str;
+    }
+
+    function updateStaticUI() {
+        document.getElementById('mainTitle').innerText = t('title');
+        document.getElementById('subTitle').innerText = t('subTitle');
+        document.getElementById('uploadText').innerText = t('uploadText');
+        document.getElementById('refABadge').innerText = t('refABadge');
+        document.querySelector('[data-i18n-btn="startA"]').innerText = t('startA_btn');
+        document.querySelector('[data-i18n-btn="endA"]').innerText = t('endA_btn');
+        document.querySelector('[data-i18n-btn="clearA"]').innerText = t('clearA_btn');
+        document.getElementById('startCoordLabel').innerText = t('startCoordLabel');
+        document.getElementById('endCoordLabel').innerText = t('endCoordLabel');
+        document.getElementById('realLengthALabel').innerText = t('realLengthALabel');
+        document.querySelector('[data-i18n-btn="calibrateA"]').innerText = t('calibrateA_btn');
+        document.getElementById('quickATitle').innerText = t('quickATitle');
+        document.getElementById('ratioALabel').innerHTML = t('ratioALabel');
+        document.getElementById('refPxALabel').innerHTML = t('refPxALabel');
+        document.getElementById('refBBadge').innerText = t('refBBadge');
+        document.querySelector('[data-i18n-btn="startB"]').innerText = t('startB_btn');
+        document.querySelector('[data-i18n-btn="endB"]').innerText = t('endB_btn');
+        document.querySelector('[data-i18n-btn="clearB"]').innerText = t('clearB_btn');
+        document.getElementById('startCoordLabelB').innerText = t('startCoordLabelB');
+        document.getElementById('endCoordLabelB').innerText = t('endCoordLabelB');
+        document.getElementById('realLengthBLabel').innerText = t('realLengthBLabel');
+        document.querySelector('[data-i18n-btn="calibrateB"]').innerText = t('calibrateB_btn');
+        document.getElementById('quickBTitle').innerText = t('quickBTitle');
+        document.getElementById('ratioBLabel').innerHTML = t('ratioBLabel');
+        document.getElementById('refPxBLabel').innerHTML = t('refPxBLabel');
+        document.getElementById('modeBadge').innerText = t('modeBadge');
+        document.querySelector('[data-i18n-mode="length"]').innerText = t('modeLength');
+        document.querySelector('[data-i18n-mode="angle"]').innerText = t('modeAngle');
+        document.querySelector('[data-i18n-mode="area"]').innerText = t('modeArea');
+        document.querySelector('[data-i18n-btn="clearMeasure"]').innerText = t('clearMeasure_btn');
+        document.getElementById('errorTip').innerHTML = t('errorTip');
+        document.getElementById('footnote').innerHTML = t('footnote');
+        document.getElementById('unitCmOption').innerText = t('unitCm');
+        document.getElementById('unitMmOption').innerText = t('unitMm');
+        document.querySelectorAll('#unitSelectA option, #unitSelectB option').forEach(opt => {
+            if(opt.value === 'cm') opt.innerText = t('unitCm');
+            else if(opt.value === 'mm') opt.innerText = t('unitMm');
+        });
+        // 参照物B的快捷按钮英文化
+        const bQuickBtns = document.querySelectorAll('.ref-b-panel .quick-size-btn');
+        const bKeys = ['quickBtn_card', 'quickBtn_cardW', 'quickBtn_a4l', 'quickBtn_a4w', 'quickBtn_phone', 'quickBtn_express'];
+        bQuickBtns.forEach((btn, idx) => { if(bKeys[idx]) btn.innerText = t(bKeys[idx]); });
+        // 参照物A的快捷按钮英文化
+        const aQuickBtns = document.querySelectorAll('.toolbar:not(.ref-b-panel) .quick-size-btn');
+        aQuickBtns.forEach((btn, idx) => { if(bKeys[idx]) btn.innerText = t(bKeys[idx]); });
+    }
+
+    function switchLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('measure_lang', currentLang);
+        updateStaticUI();
+        if(typeof drawFullCanvas === 'function') drawFullCanvas();
+        let tip = '';
+        if (activeMode === 'length') tip = t('status_modeTip_length');
+        else if (activeMode === 'angle') tip = t('status_modeTip_angle');
+        else tip = t('status_modeTip_area');
+        modeStatusSpan.innerText = tip + (calibratedA ? ' (A calibrated)' : (calibratedB ? ' (B calibrated)' : ''));
+    }
+
+    // ========== 原始测量逻辑 (完整保留，角度线和长度显示均已确保) ==========
+    const canvas = document.getElementById('measureCanvas');
+    const ctx = canvas.getContext('2d');
+    const fileInput = document.getElementById('fileInput');
+    const uploadZone = document.getElementById('uploadZone');
+    const btnStartA = document.getElementById('btnStartPointA'), btnEndA = document.getElementById('btnEndPointA'), btnClearA = document.getElementById('btnClearRefA'), btnCalibrateA = document.getElementById('btnCalibrateA');
+    const startCoordASpan = document.getElementById('startCoordA'), endCoordASpan = document.getElementById('endCoordA'), ratioValASpan = document.getElementById('ratioValA'), ratioUnitASpan = document.getElementById('ratioUnitA'), refPxASpan = document.getElementById('refPxA');
+    const realLengthAInput = document.getElementById('realLengthA'), unitSelectA = document.getElementById('unitSelectA');
+    const btnStartB = document.getElementById('btnStartPointB'), btnEndB = document.getElementById('btnEndPointB'), btnClearB = document.getElementById('btnClearRefB'), btnCalibrateB = document.getElementById('btnCalibrateB');
+    const startCoordBSpan = document.getElementById('startCoordB'), endCoordBSpan = document.getElementById('endCoordB'), ratioValBSpan = document.getElementById('ratioValB'), ratioUnitBSpan = document.getElementById('ratioUnitB'), refPxBSpan = document.getElementById('refPxB');
+    const realLengthBInput = document.getElementById('realLengthB'), unitSelectB = document.getElementById('unitSelectB');
+    const modeLengthBtn = document.getElementById('modeLength'), modeAngleBtn = document.getElementById('modeAngle'), modeAreaBtn = document.getElementById('modeArea'), btnClearMeasure = document.getElementById('btnClearMeasure');
+    const modeStatusSpan = document.getElementById('modeStatus'), resultDisplaySpan = document.getElementById('resultDisplay');
+    
+    let imgElement = null, originalImgW = 0, originalImgH = 0, displayScale = 1;
+    let refA_start = null, refA_end = null, calibratedA = false, pixelsPerUnitA = 0, currentUnitA = 'cm';
+    let refB_start = null, refB_end = null, calibratedB = false, pixelsPerUnitB = 0, currentUnitB = 'cm';
+    let pickingRef = null;
+    let activeMode = 'length', lengthPoints = [], angleVertex = null, anglePoints = [], areaPolygon = [], areaComplete = false;
+    
+    function rawToCanvas(rawX, rawY) { return { x: rawX * displayScale, y: rawY * displayScale }; }
+    function canvasToRaw(canvasX, canvasY) { if (!imgElement) return null; return { x: canvasX / displayScale, y: canvasY / displayScale }; }
+    function rawDistance(p1,p2) { return Math.hypot(p1.x-p2.x, p1.y-p2.y); }
+    function updateResultDisplay(text) { resultDisplaySpan.innerText = text; }
+    function getCanvasCoord(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width/rect.width, scaleY = canvas.height/rect.height;
+        let cx, cy;
+        if(e.touches){ cx=e.touches[0].clientX; cy=e.touches[0].clientY; } else { cx=e.clientX; cy=e.clientY; }
+        let canvasX = (cx - rect.left) * scaleX, canvasY = (cy - rect.top) * scaleY;
+        canvasX = Math.min(Math.max(0, canvasX), canvas.width);
+        canvasY = Math.min(Math.max(0, canvasY), canvas.height);
+        return {x: canvasX, y: canvasY};
+    }
+    
+    function calibrateRef(isA) {
+        if (!imgElement) { alert(t('alert_uploadFirst')); return false; }
+        if (isA) {
+            if (!refA_start || !refA_end) { alert(t('alert_missingRefA')); return false; }
+            let realVal = parseFloat(realLengthAInput.value);
+            if (isNaN(realVal) || realVal <= 0) { alert(t('alert_invalidLengthA')); return false; }
+            const unit = unitSelectA.value; currentUnitA = unit;
+            let realLenCm = unit === 'cm' ? realVal : realVal / 10;
+            const pxDist = rawDistance(refA_start, refA_end);
+            if (pxDist < 1) { alert(t('alert_pointsTooCloseA')); return false; }
+            const pixelsPerCm = pxDist / realLenCm;
+            pixelsPerUnitA = unit === 'cm' ? pixelsPerCm : pixelsPerCm * 10;
+            calibratedA = true;
+            refPxASpan.innerText = pxDist.toFixed(1);
+            ratioValASpan.innerText = pixelsPerUnitA.toFixed(2);
+            ratioUnitASpan.innerText = `px/${unit}`;
+            modeStatusSpan.innerText = t('status_calibratedA', {unit: unit, val: pixelsPerUnitA.toFixed(2)}) + (calibratedB ? '  B calibrated' : '');
+            drawFullCanvas(); return true;
+        } else {
+            if (!refB_start || !refB_end) { alert(t('alert_missingRefB')); return false; }
+            let realVal = parseFloat(realLengthBInput.value);
+            if (isNaN(realVal) || realVal <= 0) { alert(t('alert_invalidLengthB')); return false; }
+            const unit = unitSelectB.value; currentUnitB = unit;
+            let realLenCm = unit === 'cm' ? realVal : realVal / 10;
+            const pxDist = rawDistance(refB_start, refB_end);
+            if (pxDist < 1) { alert(t('alert_pointsTooCloseB')); return false; }
+            const pixelsPerCm = pxDist / realLenCm;
+            pixelsPerUnitB = unit === 'cm' ? pixelsPerCm : pixelsPerCm * 10;
+            calibratedB = true;
+            refPxBSpan.innerText = pxDist.toFixed(1);
+            ratioValBSpan.innerText = pixelsPerUnitB.toFixed(2);
+            ratioUnitBSpan.innerText = `px/${unit}`;
+            modeStatusSpan.innerText = (calibratedA ? 'A calibrated ' : '') + t('status_calibratedB', {unit: unit, val: pixelsPerUnitB.toFixed(2)});
+            drawFullCanvas(); return true;
+        }
+    }
+    
+    function getBothLengths(p1,p2) { let parts=[]; if(calibratedA){ parts.push(`A: ${(rawDistance(p1,p2)/pixelsPerUnitA).toFixed(1)} ${currentUnitA}`); } if(calibratedB){ parts.push(`B: ${(rawDistance(p1,p2)/pixelsPerUnitB).toFixed(1)} ${currentUnitB}`); } return parts.length?parts.join('  |  '):'—'; }
+    function getAngleValue(vertex,pB,pC){ const v1={x:pB.x-vertex.x,y:pB.y-vertex.y}, v2={x:pC.x-vertex.x,y:pC.y-vertex.y}; const dot=v1.x*v2.x+v1.y*v2.y, mag1=Math.hypot(v1.x,v1.y), mag2=Math.hypot(v2.x,v2.y); if(mag1===0||mag2===0) return {small:0,large:0}; let rad=Math.acos(Math.min(1,Math.max(-1,dot/(mag1*mag2)))); let small=rad*180/Math.PI; return {small, large:360-small}; }
+    function getBothAnglesText(vertex,pB,pC){ let {small,large}=getAngleValue(vertex,pB,pC); let parts=[]; if(calibratedA) parts.push(`A: small ${small.toFixed(1)}° large ${large.toFixed(1)}°`); if(calibratedB) parts.push(`B: small ${small.toFixed(1)}° large ${large.toFixed(1)}°`); return parts.length?parts.join('  |  '):'—'; }
+    function getBothArea(points){ if(points.length<3) return ''; let area=0; for(let i=0;i<points.length;i++){ let p1=points[i], p2=points[(i+1)%points.length]; area+=p1.x*p2.y-p2.x*p1.y; } area=Math.abs(area)/2; let parts=[]; if(calibratedA) parts.push(`A: ${(area/(pixelsPerUnitA*pixelsPerUnitA)).toFixed(2)} ${currentUnitA}²`); if(calibratedB) parts.push(`B: ${(area/(pixelsPerUnitB*pixelsPerUnitB)).toFixed(2)} ${currentUnitB}²`); return parts.length?parts.join('  |  '):'—'; }
+    
+    function drawPointRaw(raw, color, labelKey) {
+        const p = rawToCanvas(raw.x, raw.y);
+        ctx.fillStyle = color; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 2*Math.PI); ctx.fill();
+        ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, 2*Math.PI); ctx.fill();
+        if (labelKey) { ctx.fillStyle = "#1e293b"; ctx.font = "12px system-ui"; ctx.fillText(t(labelKey), p.x+4, p.y-4); }
+    }
+    
+    function drawRuler(startRaw, pixelsPerUnitLocal, unit, color) {
+        const startCanvas = rawToCanvas(startRaw.x, startRaw.y);
+        const stepRawPx = pixelsPerUnitLocal; if(stepRawPx<0.5) return;
+        let currentRawX = startRaw.x, counter = 0;
+        ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color==="#d97706"?"#b45309":"#7c3aed"; ctx.lineWidth=1.8;
+        ctx.font = `bold ${Math.max(10,12*displayScale)}px monospace`; ctx.setLineDash([]);
+        while(currentRawX <= originalImgW){
+            const canvasX = currentRawX * displayScale, canvasY = startCanvas.y;
+            if(canvasX>0 && canvasX<canvas.width){
+                let tickHeight = (counter%5===0 && counter!==0) ? 20 : 12;
+                ctx.beginPath(); ctx.moveTo(canvasX,canvasY-tickHeight/2); ctx.lineTo(canvasX,canvasY+tickHeight/2); ctx.stroke();
+                if(counter>0){ ctx.fillStyle = color==="#d97706"?"#c2410c":"#6d28d9"; ctx.fillText(`${counter}${unit}`, canvasX+3, canvasY-6); }
+            }
+            currentRawX += stepRawPx; counter++; if(counter>200) break;
+        }
+        ctx.beginPath(); ctx.setLineDash([5,6]); ctx.strokeStyle=color; ctx.moveTo(startCanvas.x,startCanvas.y); ctx.lineTo(canvas.width,startCanvas.y); ctx.stroke();
+        ctx.setLineDash([]); ctx.fillStyle=color; ctx.fillText(t('rulerLabel'), startCanvas.x+4, startCanvas.y-8);
+        ctx.restore();
+    }
+    
+    function drawFullCanvas() {
+        if (!ctx || !imgElement) return;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(imgElement,0,0,canvas.width,canvas.height);
+        if(refA_start) drawPointRaw(refA_start, "#3b82f6", "canvasLabel_A_start");
+        if(refA_end) drawPointRaw(refA_end, "#3b82f6", "canvasLabel_A_end");
+        if(refA_start && refA_end){ const p1=rawToCanvas(refA_start.x,refA_start.y), p2=rawToCanvas(refA_end.x,refA_end.y); ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.strokeStyle="#3b82f6"; ctx.lineWidth=2; ctx.stroke(); }
+        if(refB_start) drawPointRaw(refB_start, "#8b5cf6", "canvasLabel_B_start");
+        if(refB_end) drawPointRaw(refB_end, "#8b5cf6", "canvasLabel_B_end");
+        if(refB_start && refB_end){ const p1=rawToCanvas(refB_start.x,refB_start.y), p2=rawToCanvas(refB_end.x,refB_end.y); ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.strokeStyle="#8b5cf6"; ctx.lineWidth=2; ctx.stroke(); }
+        if(calibratedA && refA_start) drawRuler(refA_start, pixelsPerUnitA, currentUnitA, "#d97706");
+        else if(calibratedB && refB_start && !calibratedA) drawRuler(refB_start, pixelsPerUnitB, currentUnitB, "#8b5cf6");
+        
+        // 长度模式 - 确保显示线段和长度文本
+        if (activeMode === 'length') {
+            for (let p of lengthPoints) drawPointRaw(p, "#dc2626", null);
+            if (lengthPoints.length === 2) {
+                const p1 = rawToCanvas(lengthPoints[0].x, lengthPoints[0].y);
+                const p2 = rawToCanvas(lengthPoints[1].x, lengthPoints[1].y);
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = "#dc2626"; ctx.lineWidth = 3; ctx.setLineDash([8,6]); ctx.stroke(); ctx.setLineDash([]);
+                const lenText = getBothLengths(lengthPoints[0], lengthPoints[1]);
+                updateResultDisplay(lenText);
+                const midX = (p1.x + p2.x)/2, midY = (p1.y + p2.y)/2;
+                ctx.fillStyle = "#b91c1c"; ctx.font = "bold 14px system-ui";
+                ctx.fillText(lenText, midX+5, midY-5);
+            } else if (lengthPoints.length === 1) {
+                updateResultDisplay(t('status_length_waitSecond'));
+            }
+        }
+        
+       // 角度模式 - 确保圆弧和角度文本完整绘制
+     if (activeMode === 'angle') {
+    if (angleVertex) drawPointRaw(angleVertex, "#f97316", "canvasLabel_vertex");
+    for (let i=0; i<anglePoints.length; i++) {
+        drawPointRaw(anglePoints[i], "#ea580c", null);
+        // 绘制顶点到角度点的辅助线
+        if (angleVertex) {
+            const vCanvas = rawToCanvas(angleVertex.x, angleVertex.y);
+            const pCanvas = rawToCanvas(anglePoints[i].x, anglePoints[i].y);
+            ctx.beginPath();
+            ctx.moveTo(vCanvas.x, vCanvas.y);
+            ctx.lineTo(pCanvas.x, pCanvas.y);
+            ctx.strokeStyle = "#f97316";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+
+    if (angleVertex && anglePoints.length === 2) {
+        const { small } = getAngleValue(angleVertex, anglePoints[0], anglePoints[1]);
+        updateResultDisplay(getBothAnglesText(angleVertex, anglePoints[0], anglePoints[1]));
+
+        // 绘制圆弧和角度数字
+        const v = rawToCanvas(angleVertex.x, angleVertex.y);
+        const pB = rawToCanvas(anglePoints[0].x, anglePoints[0].y);
+        const pC = rawToCanvas(anglePoints[1].x, anglePoints[1].y);
+        const angleRad = small * Math.PI / 180;
+        const radius = 40;
+        const startAngle = Math.atan2(pB.y - v.y, pB.x - v.x);
+        let endAngle = startAngle + angleRad;
+
+        ctx.beginPath();
+        ctx.arc(v.x, v.y, radius, startAngle, endAngle, angleRad > Math.PI);
+        ctx.strokeStyle = "#f59e0b";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const midRad = startAngle + angleRad/2;
+        const textX = v.x + (radius+12) * Math.cos(midRad);
+        const textY = v.y + (radius+8) * Math.sin(midRad);
+        ctx.fillStyle = "#c2410c";
+        ctx.font = "bold 14px system-ui";
+        ctx.fillText(`${small.toFixed(0)}°`, textX, textY);
+    }
 }
-
-// ====================== 你原来的功能代码（完全没动）======================
-(function(){
-        const canvas = document.getElementById('measureCanvas');
-        const ctx = canvas.getContext('2d');
-        const fileInput = document.getElementById('fileInput');
-        const uploadZone = document.getElementById('uploadZone');
-        const btnSetStart = document.getElementById('btnSetStart');
-        const btnSetEnd = document.getElementById('btnSetEnd');
-        const btnClearRefPoints = document.getElementById('btnClearRefPoints');
-        const btnCalibrate = document.getElementById('btnCalibrate');
-        const btnMeasureMode = document.getElementById('btnMeasureMode');
-        const btnClearMeasure = document.getElementById('btnClearMeasure');
-        const startCoordSpan = document.getElementById('startCoord');
-        const endCoordSpan = document.getElementById('endCoord');
-        const ratioValueSpan = document.getElementById('ratioValue');
-        const ratioUnitSpan = document.getElementById('ratioUnit');
-        const refPxDistSpan = document.getElementById('refPxDist');
-        const modeStatusSpan = document.getElementById('modeStatus');
-        const measureResultDisplay = document.getElementById('measureResultDisplay');
-        const realLengthInput = document.getElementById('realLength');
-        const lengthUnitSelect = document.getElementById('lengthUnit');
-
-        let imgElement = null;
-        let imgOriginalWidth = 0, imgOriginalHeight = 0;
-        let canvasDisplayWidth = 0, canvasDisplayHeight = 0;
-        let displayScale = 1;
-        let refPointA_raw = null;
-        let refPointB_raw = null;
-        let calibrated = false;
-        let pixelsPerCm = 0;
-        let realReferenceLenCm = 0;
-        let measurePointsRaw = [];
-        let tempMeasureLine = null;
-        let pickingMode = null;
-        let isMeasureActive = false;
-        let canvasEventsBound = false;
-
-        function getCanvasCoordFromEvent(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            let clientX, clientY;
-            if (e.touches) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
+        
+        // 面积模式 (保持不变)
+        if (activeMode === 'area') {
+            for (let p of areaPolygon) drawPointRaw(p, "#16a34a", null);
+            for (let i=0; i<areaPolygon.length-1; i++) {
+                const p1 = rawToCanvas(areaPolygon[i].x, areaPolygon[i].y);
+                const p2 = rawToCanvas(areaPolygon[i+1].x, areaPolygon[i+1].y);
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = "#22c55e"; ctx.lineWidth = 2; ctx.stroke();
             }
-            let canvasX = (clientX - rect.left) * scaleX;
-            let canvasY = (clientY - rect.top) * scaleY;
-            canvasX = Math.min(Math.max(0, canvasX), canvas.width);
-            canvasY = Math.min(Math.max(0, canvasY), canvas.height);
-            return { x: canvasX, y: canvasY };
-        }
-
-        function canvasToRaw(canvasX, canvasY) {
-            if (!imgElement) return null;
-            const rawX = canvasX / displayScale;
-            const rawY = canvasY / displayScale;
-            return { x: Math.min(Math.max(0, rawX), imgOriginalWidth), y: Math.min(Math.max(0, rawY), imgOriginalHeight) };
-        }
-
-        function rawToCanvas(rawX, rawY) {
-            if (!imgElement) return { x: 0, y: 0 };
-            return { x: rawX * displayScale, y: rawY * displayScale };
-        }
-
-        function rawDistance(p1, p2) {
-            const dx = p1.x - p2.x;
-            const dy = p1.y - p2.y;
-            return Math.hypot(dx, dy);
-        }
-
-        function performCalibration() {
-            if (!imgElement) { alert(langData[document.documentElement.lang].alert_img || "请先上传图片"); return false; }
-            if (!refPointA_raw || !refPointB_raw) { alert(langData[document.documentElement.lang].alert_points || "请先选起点终点"); return false; }
-            let realVal = parseFloat(realLengthInput.value);
-            if (isNaN(realVal) || realVal <= 0) { alert(langData[document.documentElement.lang].alert_len || "请输入有效长度"); return false; }
-            const unit = lengthUnitSelect.value;
-            let realLengthCm = unit === 'cm' ? realVal : realVal / 10;
-            if (realLengthCm <= 0) return false;
-            const pxDistance = rawDistance(refPointA_raw, refPointB_raw);
-            if (pxDistance < 1) { alert(langData[document.documentElement.lang].alert_near || "距离太近"); return false; }
-            pixelsPerCm = pxDistance / realLengthCm;
-            realReferenceLenCm = realLengthCm;
-            calibrated = true;
-            refPxDistSpan.innerText = pxDistance.toFixed(1);
-            ratioValueSpan.innerText = pixelsPerCm.toFixed(2);
-            ratioUnitSpan.innerText = `px/${unit === 'cm' ? 'cm' : 'mm'}`;
-            modeStatusSpan.innerText = `✅ 已标定 · 1${unit === 'cm' ? 'cm' : 'mm'} = ${pixelsPerCm.toFixed(2)}px`;
-            clearMeasureTemp();
-            drawFullCanvas();
-            return true;
-        }
-
-        function drawRulerOnCanvas(ctxForDraw, displayCtxScale) {
-            if (!calibrated || !refPointA_raw || !imgElement) return;
-            const startCanvas = rawToCanvas(refPointA_raw.x, refPointA_raw.y);
-            if (startCanvas.x < 0 || startCanvas.y < 0) return;
-            const stepCm = 1;
-            const stepPixelRaw = pixelsPerCm * stepCm;
-            if (stepPixelRaw < 0.5) return;
-            let currentRawX = refPointA_raw.x;
-            const startRawY = refPointA_raw.y;
-            let maxRawX = imgOriginalWidth;
-            let cmCounter = 0;
-            ctxForDraw.save();
-            ctxForDraw.strokeStyle = "#d97706";
-            ctxForDraw.fillStyle = "#b45309";
-            ctxForDraw.lineWidth = 1.8;
-            ctxForDraw.font = `bold ${Math.max(10, 12 * displayScale)}px monospace`;
-            ctxForDraw.shadowBlur = 0;
-            while (currentRawX <= maxRawX) {
-                const canvasX = currentRawX * displayScale;
-                const canvasY = startCanvas.y;
-                if (canvasX > 0 && canvasX < canvas.width) {
-                    let tickHeight = 12;
-                    if (cmCounter % 5 === 0 && cmCounter !== 0) tickHeight = 20;
-                    ctxForDraw.beginPath();
-                    ctxForDraw.moveTo(canvasX, canvasY - tickHeight/2);
-                    ctxForDraw.lineTo(canvasX, canvasY + tickHeight/2);
-                    ctxForDraw.stroke();
-                    if (cmCounter > 0) {
-                        ctxForDraw.fillStyle = "#c2410c";
-                        ctxForDraw.fillText(`${cmCounter}cm`, canvasX + 3, canvasY - 6);
-                    }
-                }
-                currentRawX += stepPixelRaw;
-                cmCounter++;
-                if (cmCounter > 200) break;
+            if (areaPolygon.length >= 3 && !areaComplete) {
+                const first = rawToCanvas(areaPolygon[0].x, areaPolygon[0].y);
+                const last = rawToCanvas(areaPolygon[areaPolygon.length-1].x, areaPolygon[areaPolygon.length-1].y);
+                ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(first.x, first.y);
+                ctx.strokeStyle = "#22c55e"; ctx.setLineDash([8,6]); ctx.stroke(); ctx.setLineDash([]);
+                updateResultDisplay(`preview: ${getBothArea(areaPolygon)}`);
             }
-            ctxForDraw.beginPath();
-            ctxForDraw.setLineDash([5,6]);
-            ctxForDraw.strokeStyle = "#f59e0b";
-            ctxForDraw.lineWidth = 1.2;
-            ctxForDraw.moveTo(startCanvas.x, startCanvas.y);
-            ctxForDraw.lineTo(canvas.width, startCanvas.y);
-            ctxForDraw.stroke();
-            ctxForDraw.setLineDash([]);
-            ctxForDraw.fillStyle = "#d97706";
-            ctxForDraw.font = `bold ${Math.max(11,13)}px system-ui`;
-            ctxForDraw.fillText("📏 参照物起点 →", startCanvas.x + 4, startCanvas.y - 8);
-            ctxForDraw.restore();
-        }
-
-        function drawReferenceMarkers(ctxDraw) {
-            if (refPointA_raw && refPointB_raw) {
-                const pa = rawToCanvas(refPointA_raw.x, refPointA_raw.y);
-                const pb = rawToCanvas(refPointB_raw.x, refPointB_raw.y);
-                ctxDraw.beginPath();
-                ctxDraw.moveTo(pa.x, pa.y);
-                ctxDraw.lineTo(pb.x, pb.y);
-                ctxDraw.strokeStyle = "#3b82f6";
-                ctxDraw.lineWidth = 2.5;
-                ctxDraw.setLineDash([]);
-                ctxDraw.stroke();
-                ctxDraw.fillStyle = "#2563eb";
-                ctxDraw.beginPath(); ctxDraw.arc(pa.x, pa.y, 6, 0, Math.PI*2); ctxDraw.fill();
-                ctxDraw.fillStyle = "white";
-                ctxDraw.beginPath(); ctxDraw.arc(pa.x, pa.y, 2.5, 0, Math.PI*2); ctxDraw.fill();
-                ctxDraw.fillStyle = "#2563eb";
-                ctxDraw.beginPath(); ctxDraw.arc(pb.x, pb.y, 6, 0, Math.PI*2); ctxDraw.fill();
-                ctxDraw.fillStyle = "white";
-                ctxDraw.beginPath(); ctxDraw.arc(pb.x, pb.y, 2.5, 0, Math.PI*2); ctxDraw.fill();
-                ctxDraw.font = "12px system-ui";
-                ctxDraw.fillStyle = "#1e40af";
-                ctxDraw.fillText(langData[document.documentElement.lang].start || "起点", pa.x+4, pa.y-4);
-                ctxDraw.fillText(langData[document.documentElement.lang].end || "终点", pb.x+4, pb.y-4);
-            } else if (refPointA_raw) {
-                const pa = rawToCanvas(refPointA_raw.x, refPointA_raw.y);
-                ctxDraw.fillStyle = "#3b82f6";
-                ctxDraw.beginPath(); ctxDraw.arc(pa.x, pa.y, 6, 0, Math.PI*2); ctxDraw.fill();
-                ctxDraw.fillStyle = "white";
-                ctxDraw.beginPath(); ctxDraw.arc(pa.x, pa.y, 2.5, 0, Math.PI*2); ctxDraw.fill();
-            } else if (refPointB_raw) {
-                const pb = rawToCanvas(refPointB_raw.x, refPointB_raw.y);
-                ctxDraw.fillStyle = "#3b82f6";
-                ctxDraw.beginPath(); ctxDraw.arc(pb.x, pb.y, 6, 0, Math.PI*2); ctxDraw.fill();
+            if (areaComplete && areaPolygon.length >= 3) {
+                updateResultDisplay(getBothArea(areaPolygon));
+                const pts = areaPolygon.map(p=>rawToCanvas(p.x,p.y));
+                ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+                for (let i=1; i<pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+                ctx.closePath(); ctx.fillStyle = "rgba(34,197,94,0.2)"; ctx.fill();
+                ctx.strokeStyle = "#15803d"; ctx.lineWidth = 2; ctx.stroke();
             }
         }
-
-        function drawMeasurement(ctxDraw) {
-            if (measurePointsRaw.length === 2) {
-                const p1 = rawToCanvas(measurePointsRaw[0].x, measurePointsRaw[0].y);
-                const p2 = rawToCanvas(measurePointsRaw[1].x, measurePointsRaw[1].y);
-                ctxDraw.beginPath();
-                ctxDraw.moveTo(p1.x, p1.y);
-                ctxDraw.lineTo(p2.x, p2.y);
-                ctxDraw.strokeStyle = "#dc2626";
-                ctxDraw.lineWidth = 3;
-                ctxDraw.setLineDash([8,6]);
-                ctxDraw.stroke();
-                ctxDraw.setLineDash([]);
-                ctxDraw.fillStyle = "#b91c1c";
-                ctxDraw.beginPath(); ctxDraw.arc(p1.x, p1.y,5,0,Math.PI*2); ctxDraw.fill();
-                ctxDraw.beginPath(); ctxDraw.arc(p2.x, p2.y,5,0,Math.PI*2); ctxDraw.fill();
-                if (calibrated && pixelsPerCm > 0) {
-                    const rawDist = rawDistance(measurePointsRaw[0], measurePointsRaw[1]);
-                    const realLenCm = rawDist / pixelsPerCm;
-                    const unit = lengthUnitSelect.value;
-                    let showVal = realLenCm;
-                    let showUnit = "cm";
-                    if (unit === "mm") { showVal = realLenCm *10; showUnit = "mm"; }
-                    measureResultDisplay.innerText = `📏 ${showVal.toFixed(1)} ${showUnit}`;
-                    const midX = (p1.x+p2.x)/2;
-                    const midY = (p1.y+p2.y)/2;
-                    ctxDraw.font = `bold ${Math.max(12,14)}px system-ui`;
-                    ctxDraw.fillStyle = "#b91c1c";
-                    ctxDraw.fillText(`${showVal.toFixed(1)}${showUnit}`, midX+5, midY-5);
-                } else {
-                    measureResultDisplay.innerText = langData[document.documentElement.lang].no_cali || "未标定";
-                }
-            } else {
-                if(!isMeasureActive) measureResultDisplay.innerText = "—";
+    }
+    
+    function finalizePolygon() {
+        if(activeMode === 'area' && areaPolygon.length>=3 && !areaComplete){ areaComplete=true; drawFullCanvas(); modeStatusSpan.innerText=t('status_area_complete'); }
+        else if(activeMode === 'area' && areaPolygon.length<3) modeStatusSpan.innerText=t('status_area_needMore');
+    }
+    
+    function setupQuickButtons() {
+        document.querySelectorAll('.quick-sizes button').forEach(btn => {
+            btn.removeEventListener('click', quickClickHandler);
+            btn.addEventListener('click', quickClickHandler);
+        });
+        function quickClickHandler(e){
+            e.stopPropagation();
+            const target = e.currentTarget.getAttribute('data-target');
+            const lengthVal = e.currentTarget.getAttribute('data-length');
+            const unitVal = e.currentTarget.getAttribute('data-unit');
+            if(target === 'A'){
+                realLengthAInput.value = lengthVal;
+                if(unitVal === 'cm') unitSelectA.value = 'cm';
+                else if(unitVal === 'mm') unitSelectA.value = 'mm';
+                modeStatusSpan.innerText = t('status_quickFillA', {val: lengthVal, unit: unitVal});
+            } else if(target === 'B'){
+                realLengthBInput.value = lengthVal;
+                if(unitVal === 'cm') unitSelectB.value = 'cm';
+                else if(unitVal === 'mm') unitSelectB.value = 'mm';
+                modeStatusSpan.innerText = t('status_quickFillB', {val: lengthVal, unit: unitVal});
             }
         }
-
-        function drawFullCanvas() {
-            if (!imgElement || !ctx) return;
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.drawImage(imgElement,0,0,canvas.width,canvas.height);
-            drawReferenceMarkers(ctx);
-            if (calibrated && refPointA_raw) drawRulerOnCanvas(ctx, displayScale);
-            drawMeasurement(ctx);
+    }
+    
+    function onCanvasTap(e){
+        if(!imgElement){ alert(t('alert_uploadFirst')); return; }
+        const canvasCoord = getCanvasCoord(e);
+        const rawCoord = canvasToRaw(canvasCoord.x, canvasCoord.y);
+        if(!rawCoord) return;
+        if(pickingRef === 'startA'){ refA_start=rawCoord; startCoordASpan.innerText=`(${refA_start.x.toFixed(0)},${refA_start.y.toFixed(0)})`; pickingRef=null; modeStatusSpan.innerText=t('status_startASelected'); drawFullCanvas(); return; }
+        if(pickingRef === 'endA'){ refA_end=rawCoord; endCoordASpan.innerText=`(${refA_end.x.toFixed(0)},${refA_end.y.toFixed(0)})`; pickingRef=null; modeStatusSpan.innerText=t('status_endASelected'); drawFullCanvas(); return; }
+        if(pickingRef === 'startB'){ refB_start=rawCoord; startCoordBSpan.innerText=`(${refB_start.x.toFixed(0)},${refB_start.y.toFixed(0)})`; pickingRef=null; modeStatusSpan.innerText=t('status_startBSelected'); drawFullCanvas(); return; }
+        if(pickingRef === 'endB'){ refB_end=rawCoord; endCoordBSpan.innerText=`(${refB_end.x.toFixed(0)},${refB_end.y.toFixed(0)})`; pickingRef=null; modeStatusSpan.innerText=t('status_endBSelected'); drawFullCanvas(); return; }
+        if(activeMode === 'length'){ lengthPoints.push(rawCoord); if(lengthPoints.length>2) lengthPoints=[lengthPoints[1]]; drawFullCanvas(); }
+        else if(activeMode === 'angle'){
+            if(angleVertex === null){ angleVertex=rawCoord; modeStatusSpan.innerText=t('status_angle_vertex'); drawFullCanvas(); }
+            else if(anglePoints.length===0){ anglePoints.push(rawCoord); modeStatusSpan.innerText=t('status_angle_second'); drawFullCanvas(); }
+            else if(anglePoints.length===1){ anglePoints.push(rawCoord); drawFullCanvas(); modeStatusSpan.innerText=t('status_angle_done'); }
+            else { modeStatusSpan.innerText=t('status_angle_already'); }
         }
-
-        function clearMeasureTemp() {
-            measurePointsRaw = [];
-            measureResultDisplay.innerText = "—";
-            drawFullCanvas();
+        else if(activeMode === 'area'){
+            if(!areaComplete){ areaPolygon.push(rawCoord); drawFullCanvas(); }
+            else { modeStatusSpan.innerText=t('status_area_closed'); }
         }
-
-        function clearReferencePoints() {
-            refPointA_raw = null; refPointB_raw = null; calibrated = false; pixelsPerCm = 0;
-            startCoordSpan.innerText = "—"; endCoordSpan.innerText = "—";
-            ratioValueSpan.innerText = "—"; refPxDistSpan.innerText = "—";
-            modeStatusSpan.innerText = langData[document.documentElement.lang].cleared || "已清空";
-            measureResultDisplay.innerText = "—";
-            clearMeasureTemp();
-            drawFullCanvas();
-        }
-
-        function onCanvasClick(e) {
-            e.preventDefault();
-            if (!imgElement) { alert(langData[document.documentElement.lang].alert_img || "请先上传图片"); return; }
-            const canvasCoord = getCanvasCoordFromEvent(e);
-            const rawCoord = canvasToRaw(canvasCoord.x, canvasCoord.y);
-            if (!rawCoord) return;
-            if (isMeasureActive) {
-                measurePointsRaw.push(rawCoord);
-                if (measurePointsRaw.length>2) measurePointsRaw = [measurePointsRaw[1]];
-                if (measurePointsRaw.length ===2) {
-                    drawFullCanvas();
-                    isMeasureActive = false;
-                    modeStatusSpan.innerText = langData[document.documentElement.lang].done || "测量完成";
-                } else {
-                    drawFullCanvas();
-                    modeStatusSpan.innerText = langData[document.documentElement.lang].click_second || "请点第二点";
-                }
-                return;
-            }
-            if (pickingMode === 'start') {
-                refPointA_raw = rawCoord;
-                startCoordSpan.innerText = `(${rawCoord.x.toFixed(0)},${rawCoord.y.toFixed(0)})`;
-                pickingMode = null;
-                modeStatusSpan.innerText = langData[document.documentElement.lang].select_b || "选终点";
-                drawFullCanvas();
-            } else if (pickingMode === 'end') {
-                refPointB_raw = rawCoord;
-                endCoordSpan.innerText = `(${rawCoord.x.toFixed(0)},${rawCoord.y.toFixed(0)})`;
-                pickingMode = null;
-                modeStatusSpan.innerText = langData[document.documentElement.lang].input_len || "输入长度";
-                drawFullCanvas();
-            }
-        }
-
-        function activateMeasureMode() {
-            if (!imgElement) { alert(langData[document.documentElement.lang].alert_img || "请先上传图片"); return; }
-            isMeasureActive = true; measurePointsRaw = [];
-            modeStatusSpan.innerText = langData[document.documentElement.lang].measure_tip || "请点两点测量";
-            measureResultDisplay.innerText = "...";
-            drawFullCanvas();
-        }
-
-        function loadImageAndSetup(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    imgElement = img;
-                    imgOriginalWidth = img.width;
-                    imgOriginalHeight = img.height;
-                    const maxWidth = Math.min(650, window.innerWidth - 40);
-                    canvas.width = maxWidth;
-                    canvas.height = (imgOriginalHeight / imgOriginalWidth) * maxWidth;
-                    canvasDisplayWidth = canvas.width;
-                    canvasDisplayHeight = canvas.height;
-                    displayScale = canvas.width / imgOriginalWidth;
-                    calibrated = false; refPointA_raw = null; refPointB_raw = null;
-                    measurePointsRaw = []; isMeasureActive = false; pickingMode = null;
-                    startCoordSpan.innerText = "—"; endCoordSpan.innerText = "—";
-                    ratioValueSpan.innerText = "—"; refPxDistSpan.innerText = "—";
-                    modeStatusSpan.innerText = langData[document.documentElement.lang].loaded || "已加载";
-                    measureResultDisplay.innerText = "—";
-                    drawFullCanvas();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function onFileSelected(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            loadImageAndSetup(file);
-        }
-
-        function bindEvents() {
-            fileInput.addEventListener('change', onFileSelected);
-            uploadZone.addEventListener('click', () => fileInput.click());
-            canvas.addEventListener('click', onCanvasClick);
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onCanvasClick(e); });
-            btnSetStart.addEventListener('click', () => {
-                if (!imgElement) { alert(langData[document.documentElement.lang].alert_img || "请先上传图片"); return; }
-                pickingMode = 'start'; isMeasureActive = false;
-                modeStatusSpan.innerText = langData[document.documentElement.lang].click_a || "点击起点";
-            });
-            btnSetEnd.addEventListener('click', () => {
-                if (!imgElement) return;
-                pickingMode = 'end'; isMeasureActive = false;
-                modeStatusSpan.innerText = langData[document.documentElement.lang].click_b || "点击终点";
-            });
-            btnClearRefPoints.addEventListener('click', clearReferencePoints);
-            btnCalibrate.addEventListener('click', () => { performCalibration(); });
-            btnMeasureMode.addEventListener('click', activateMeasureMode);
-            btnClearMeasure.addEventListener('click', clearMeasureTemp);
-        }
-
-        function init() {
-            bindEvents();
-            setLang('zh');
-        }
-        init();
-})();
+    }
+    
+    function setMode(mode){
+        activeMode=mode; lengthPoints=[]; angleVertex=null; anglePoints=[]; areaPolygon=[]; areaComplete=false;
+        updateResultDisplay('—');
+        modeLengthBtn.classList.remove('active'); modeAngleBtn.classList.remove('active'); modeAreaBtn.classList.remove('active');
+        if(mode==='length') modeLengthBtn.classList.add('active');
+        else if(mode==='angle') modeAngleBtn.classList.add('active');
+        else modeAreaBtn.classList.add('active');
+        let tip='';
+        if(mode==='length') tip=t('status_modeTip_length');
+        else if(mode==='angle') tip=t('status_modeTip_angle');
+        else tip=t('status_modeTip_area');
+        modeStatusSpan.innerText = tip + (calibratedA ? ' (A calibrated)' : (calibratedB ? ' (B calibrated)' : ''));
+        drawFullCanvas();
+    }
+    
+    function clearReferenceA(){ refA_start=null; refA_end=null; calibratedA=false; pixelsPerUnitA=0; startCoordASpan.innerText='—'; endCoordASpan.innerText='—'; ratioValASpan.innerText='—'; refPxASpan.innerText='—'; modeStatusSpan.innerText=t('status_clearedA'); drawFullCanvas(); }
+    function clearReferenceB(){ refB_start=null; refB_end=null; calibratedB=false; pixelsPerUnitB=0; startCoordBSpan.innerText='—'; endCoordBSpan.innerText='—'; ratioValBSpan.innerText='—'; refPxBSpan.innerText='—'; modeStatusSpan.innerText=t('status_clearedB'); drawFullCanvas(); }
+    function loadImage(file){
+        const reader=new FileReader();
+        reader.onload=e=>{ const img=new Image(); img.onload=()=>{ imgElement=img; originalImgW=img.width; originalImgH=img.height; const cw=Math.min(700,window.innerWidth-40); canvas.width=cw; canvas.height=(originalImgH/originalImgW)*cw; displayScale=canvas.width/originalImgW; refA_start=null; refA_end=null; calibratedA=false; refB_start=null; refB_end=null; calibratedB=false; startCoordASpan.innerText='—'; endCoordASpan.innerText='—'; ratioValASpan.innerText='—'; refPxASpan.innerText='—'; startCoordBSpan.innerText='—'; endCoordBSpan.innerText='—'; ratioValBSpan.innerText='—'; refPxBSpan.innerText='—'; lengthPoints=[]; angleVertex=null; anglePoints=[]; areaPolygon=[]; areaComplete=false; updateResultDisplay('—'); modeStatusSpan.innerText=t('status_imgLoaded'); drawFullCanvas(); }; img.src=e.target.result; }; reader.readAsDataURL(file);
+    }
+    
+    function bindEvents(){
+        fileInput.addEventListener('change', e=>{ if(e.target.files[0]) loadImage(e.target.files[0]); });
+        uploadZone.addEventListener('click',()=>fileInput.click());
+        canvas.addEventListener('click',onCanvasTap);
+        canvas.addEventListener('touchstart',e=>{ e.preventDefault(); onCanvasTap(e); });
+        canvas.addEventListener('dblclick',e=>{ e.preventDefault(); finalizePolygon(); });
+        btnStartA.addEventListener('click',()=>{ if(!imgElement) alert(t('alert_uploadFirst')); else pickingRef='startA'; });
+        btnEndA.addEventListener('click',()=>{ if(!imgElement) alert(t('alert_uploadFirst')); else pickingRef='endA'; });
+        btnClearA.addEventListener('click',clearReferenceA);
+        btnCalibrateA.addEventListener('click',()=>calibrateRef(true));
+        btnStartB.addEventListener('click',()=>{ if(!imgElement) alert(t('alert_uploadFirst')); else pickingRef='startB'; });
+        btnEndB.addEventListener('click',()=>{ if(!imgElement) alert(t('alert_uploadFirst')); else pickingRef='endB'; });
+        btnClearB.addEventListener('click',clearReferenceB);
+        btnCalibrateB.addEventListener('click',()=>calibrateRef(false));
+        modeLengthBtn.addEventListener('click',()=>setMode('length'));
+        modeAngleBtn.addEventListener('click',()=>setMode('angle'));
+        modeAreaBtn.addEventListener('click',()=>setMode('area'));
+        btnClearMeasure.addEventListener('click',()=>{ setMode(activeMode); drawFullCanvas(); });
+        setupQuickButtons();
+    }
+    
+    const langSwitcher = document.getElementById('languageSwitcher');
+    langSwitcher.value = currentLang;
+    langSwitcher.addEventListener('change', (e) => { switchLanguage(e.target.value); });
+    updateStaticUI();
+    bindEvents();
+    setMode('length');
+    window.drawFullCanvas = drawFullCanvas;
 </script>
 </body>
 </html>
